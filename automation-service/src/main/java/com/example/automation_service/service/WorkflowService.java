@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Service
 public class WorkflowService {
-
     @Autowired
     private WorkflowRepository workflowRepo;
 
@@ -20,18 +19,21 @@ public class WorkflowService {
     private SendingServiceClient sendingServiceClient;
 
     public void saveWorkflow(Workflow workflow, String to, String subject, String body) {
-        // Save the workflow
+        workflow.setEmailTo(to);
+        workflow.setEmailSubject(subject);
+        workflow.setEmailBody(body);
         workflowRepo.save(workflow);
-
-        // Schedule the email sending
-        scheduleEmail(to, subject, body);
     }
-    public void scheduleEmail(String to, String subject, String body) {
-        try {
-            Thread.sleep(1000);
-            sendingServiceClient.sendEmail(to, subject, body);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+    @Scheduled(cron = "*/15 * * * * *") // Runs every 15 seconds
+    public void processEmails() {
+        List<Workflow> activeWorkflows = workflowRepo.findByStatus("ACTIVE");
+        for (Workflow workflow : activeWorkflows) {
+            sendingServiceClient.sendEmail(
+                    workflow.getEmailTo(),
+                    workflow.getEmailSubject(),
+                    workflow.getEmailBody()
+            );
         }
     }
 }
