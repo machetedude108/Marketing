@@ -28,6 +28,6 @@ public class AutomationController {
 
         // Save workflow and trigger email
         workflowService.saveWorkflow(workflow, to, subject, body);
-        return "Email will be sent in 10 seconds!";
+        return "Email will be sent Soon!";
     }
 }
