@@ -3,6 +3,7 @@ package com.example.campaignservice.controller;
 import com.example.campaignservice.model.Campaign;
 import com.example.campaignservice.service.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,12 @@ public class CampaignController {
     @PostMapping
     public Campaign createCampaign(@RequestBody Campaign campaign) {
         return campaignService.createCampaign(campaign);
+    }
+
+    @PostMapping("/{id}/send")
+    public ResponseEntity<String> sendCampaign(@PathVariable Long id) {
+        campaignService.triggerCampaignSending(id);
+        return ResponseEntity.ok("Campaign sending triggered successfully.");
     }
 
     @GetMapping
