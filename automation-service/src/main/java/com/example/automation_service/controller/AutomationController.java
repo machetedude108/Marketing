@@ -30,4 +30,22 @@ public class AutomationController {
         workflowService.saveWorkflow(workflow, to, subject, body);
         return "Email will be sent Soon!";
     }
+
+    @PostMapping("/triggerCampaign")
+    public String triggerCampaign(@RequestParam Long campaignId) {
+        // Create a new workflow for the campaign
+        Workflow workflow = new Workflow();
+        workflow.setTriggerType("campaign");
+        workflow.setTriggerValue("Campaign ID: " + campaignId);
+        workflow.setActionType("send_campaign");
+        workflow.setStatus("ACTIVE");
+
+        // Save workflow
+        workflowService.saveWorkflow(workflow, null, null, null);
+
+        // Process campaigns (if needed for immediate processing)
+        workflowService.processCampaigns();
+
+        return "Campaign workflow triggered successfully!";
+    }
 }
