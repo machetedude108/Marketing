@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -27,6 +29,13 @@ public class Workflow {
     private String emailTo;
     private String emailSubject;
     private String emailBody;
+
+    // New fields for scheduling
+    private String cronExpression;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
+    private Integer repeatCount;
+    private Long intervalInSeconds;
 
     public Workflow(String emailTo, String emailSubject, String emailBody) {
         this.emailTo = emailTo;
