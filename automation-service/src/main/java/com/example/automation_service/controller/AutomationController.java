@@ -2,10 +2,13 @@ package com.example.automation_service.controller;
 
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.automation_service.model.Workflow;
 import com.example.automation_service.service.WorkflowService;
 import com.example.automation_service.dto.ScheduleRequest;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,4 +39,22 @@ public class AutomationController {
         workflowService.updateWorkflowStatus(workflowId, status);
         return "Workflow status updated successfully!";
     }
+
+    @GetMapping("/workflows")
+    public List<Workflow> getAllWorkflows() {
+        return workflowService.getAllWorkflows();
+    }
+
+    @GetMapping("/workflows/active")
+    public List<Workflow> getActiveWorkflows() {
+        return workflowService.getActiveWorkflows();
+    }
+
+    @GetMapping("/workflows/{id}")
+    public ResponseEntity<Workflow> getWorkflowById(@PathVariable UUID id) {
+        return workflowService.getWorkflowById(id)
+                .map(workflow -> ResponseEntity.ok(workflow))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

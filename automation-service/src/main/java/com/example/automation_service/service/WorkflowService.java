@@ -9,6 +9,8 @@ import com.example.automation_service.job.CampaignJob;
 import com.example.automation_service.dto.ScheduleRequest;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -94,5 +96,16 @@ public class WorkflowService {
         if ("INACTIVE".equals(status)) {
             scheduler.deleteJob(JobKey.jobKey("campaign-" + workflowId));
         }
+    }
+    public List<Workflow> getAllWorkflows() {
+        return workflowRepo.findAll();
+    }
+
+    public List<Workflow> getActiveWorkflows() {
+        return workflowRepo.findByStatus("ACTIVE");
+    }
+
+    public Optional<Workflow> getWorkflowById(UUID id) {
+        return workflowRepo.findById(id);
     }
 }
